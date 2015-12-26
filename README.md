@@ -1,25 +1,8 @@
-# cerebral-react-modules
+# cerebral-modules-react
 
-Create cerebral modules that can be reused, shared, imported or just simply keep your app tidy.
+Render cerebral-modules when using cerebral-react.
 
-## Creating a module
-
-A module needs to export the following:
-
-```js
-export default {
-  name: 'uniqueModuleName',
-  init(controller) {
-    // register signals and do other module setup
-  },
-  routes(controller) {
-    // return a cerebral-router route object that defines the routes for this module
-  },
-  Component: ModuleIndexComponent
-}
-```
-
-## Loading modules
+## Rendering Your App
 
 From your main.js
 
@@ -32,21 +15,16 @@ import external form 'external-node-module';
 import home from './modules/home';
 import notFound from './modules/notFound';
 
-// init the modules (this will also render the app)
-import loadModules from 'cerebral-react-modules/load';
-loadModules(controller, [ external, home, notFound ]);
-```
+// init the modules
+import setupModules from 'cerebral-modules';
+const chains = setupModules(controller, [ external, home, notFound ]);
 
-## Route Signals
+// use the chains to setup your routing here
+// chains.moduleName.chainName
 
-In your module routing signals you need to specify which module should be rendered. This can be done using the `setActiveModule` action.
-
-```js
-import setActiveModule from 'cerebral-react-modules/setActiveModule';
-
-controller.signal('home.routed', [
-  setActiveModule('home')
-]);
+// render the app
+import renderApp from 'cerebral-modules-react';
+renderApp(controller);
 ```
 
 ## Contribute
