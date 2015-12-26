@@ -2,6 +2,12 @@
 
 Render cerebral-modules when using cerebral-react.
 
+## Install
+
+```
+npm install cerebral-modules-react
+```
+
 ## Rendering Your App
 
 From your main.js
