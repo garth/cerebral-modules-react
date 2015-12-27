@@ -1,43 +1,36 @@
-import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
-import { Container, Decorator as State } from 'cerebral-react';
-import { _getModules } from 'cerebral-modules';
+import React, { PropTypes } from 'react';
+import Component from 'cerebral-react'
 
-@State({
-  activeModule: ['activeModule']
-})
-class ModuleSwitch extends Component {
+const ModuleSwitch = (props) => {
+  const {
+    activeModule,
+    modules
+  } = props;
 
-  static displayName = 'ModuleSwitch';
+  const loadingComponent = props.loadingComponent || 'Loading...';
+  const notFoundComponent = props.notFoundComponent || `No component found for ${activeModule} module`;
 
-  static propTypes = {
-    activeModule: PropTypes.string
-  };
-
-  render() {
-    const {
-      activeModule
-    } = this.props;
-
-    if (!activeModule) {
-      return (
-        <div>Loading...</div>
-      );
-    }
-
-    const modules = _getModules();
-    const ModuleComponent = modules[activeModule] && modules[activeModule].Component;
-
-    return ModuleComponent ? (
-      <ModuleComponent/>
-    ) : (
-      <div>No component found for {activeModule} module</div>
-    );
+  if (!activeModule) {
+    return (<div>{ loadingComponent }</div>);
   }
-}
 
-export default function render(controller) {
-  // start the app
-  const container = document.body.appendChild(document.createElement('div'));
-  ReactDOM.render(<Container controller={controller} app={ModuleSwitch}/>, container);
-}
+  const ModuleComponent = modules[activeModule] && modules[activeModule].Component;
+
+  return ModuleComponent ? (
+    // see https://github.com/cerebral/cerebral-react/issues/15
+    <ModuleComponent basePath={[activeModule]} />
+  ) : (
+    <div>{ notFoundComponent }</div>
+  );
+};
+
+ModuleSwitch.propTypes = {
+  activeModule: PropTypes.string,
+  loadingComponent: PropTypes.node,
+  modules: PropTypes.object,
+  notFoundComponent: PropTypes.node
+};
+
+export default Component(ModuleSwitch, {
+  activeModule: ['activeModule']
+});
